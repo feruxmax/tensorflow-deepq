@@ -10,7 +10,9 @@ class HumanController(object):
         self.experience = []
 
     def action(self, o):
-        return self.mapping[self.r.get("action")]
+        action = self.mapping[self.r.get("action")]
+        self.r.delete("action")
+        return action
 
     def store(self, observation, action, reward, newobservation):
         pass
@@ -24,7 +26,13 @@ def control_me():
     r = StrictRedis()
     while True:
         c = getch()
-        r.set("action", c)
+        if ord(c) == 3: #^C
+            exit()
+        else:
+            if c == 'a' or c == 's' or c == 'd' or c == 'w':
+                r.set("action", c)
+            else:
+                print("use a s d f key to control or ^C to exit")
 
 
 if __name__ == '__main__':
