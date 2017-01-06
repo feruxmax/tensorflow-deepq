@@ -9,6 +9,7 @@ import numpy as np
 import tempfile
 import tensorflow as tf
 
+from tf_rl.frontend import pygame_front as frontend
 from tf_rl.controller import DiscreteDeepQ, HumanController
 from tf_rl.simulation import KarpathyGame
 from tf_rl import simulate
@@ -53,13 +54,13 @@ current_settings = {
 }
 #%%
 # create the game simulator
-g = KarpathyGame(current_settings)
+scene = frontend.Scene(current_settings['world_size'])
+g = KarpathyGame(scene, current_settings)
 #%%
 human_control = True
 
 if human_control:
-    # WSAD CONTROL (requires extra setup - check out README)
-    current_controller = HumanController({b"w": 3, b"d": 0, b"s": 1,b"a": 2, None: 4}) 
+    current_controller = HumanController(scene) 
 else:
     # Tensorflow business - it is always good to reset a graph before creating a new controller.
     tf.reset_default_graph()

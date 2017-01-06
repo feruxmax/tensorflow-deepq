@@ -15,12 +15,27 @@ class Scene:
         self.high = size[1]
         self.size = size
         self.screen = pygame.display.set_mode(self.size)
+        self.last_key = None
 
     def add(self, item):
         self.items.append(item)
 
     def clear(self):
         self.items.clear()
+
+    def get_keys(self):
+        pressed = pygame.key.get_pressed()
+        pressed_wasd = []
+        if pressed[pygame.K_w]:
+            pressed_wasd.append("w")
+        if pressed[pygame.K_a]:
+            pressed_wasd.append("a")
+        if pressed[pygame.K_s]:
+            pressed_wasd.append("s")
+        if pressed[pygame.K_d]:
+            pressed_wasd.append("d")
+
+        return pressed_wasd
 
     def draw(self):
         self.screen.fill(WHITE)
@@ -33,7 +48,7 @@ class Scene:
         
   
 class Circle:
-    def __init__(self,center,radius,color):
+    def __init__(self,center,radius,color=YELLOW):
         self.surf = pygame.Surface((2*radius, 2*radius))
         self.surf.set_colorkey(WHITE)
         self.surf.fill(WHITE)
@@ -79,11 +94,13 @@ def test2():
     sceene.add(Circle((40,50),10))
     sceene.add(Circle((140,50),10))
 
+    key = None
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT: sys.exit()
 
         sceene.draw()
+        key = sceene.get_keys()
 
 if __name__ == '__main__':
-    test()
+    test2()

@@ -52,7 +52,7 @@ class GameObject(object):
         return frontend.Circle(self.position - Point2(self.radius, self.radius), self.radius, color=color)
 
 class KarpathyGame(object):
-    def __init__(self, settings):
+    def __init__(self, scene, settings):
         """Initiallize game simulator with settings"""
         self.settings = settings
         self.size  = self.settings["world_size"]
@@ -60,7 +60,7 @@ class KarpathyGame(object):
                       LineSegment2(Point2(0,self.size[1]),             Point2(self.size[0], self.size[1])),
                       LineSegment2(Point2(self.size[0], self.size[1]), Point2(self.size[0], 0)),
                       LineSegment2(Point2(self.size[0], 0),            Point2(0,0))]
-        self.scene = frontend.Scene((self.size[0], self.size[1]))
+        self.scene = scene
 
         self.hero = GameObject(Point2(*self.settings["hero_initial_position"]),
                                Vector2(*self.settings["hero_initial_speed"]),
