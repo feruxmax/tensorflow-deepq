@@ -298,15 +298,32 @@ class KarpathyGame(object):
 
         return scene
 
-    def draw_int(self):
+    def draw_int(self, stats):
+
         self.scene.clear()
 
+        # add world bounds
         self.scene.add(frontend.Rectangle((10, 10), self.size))
 
+        # add objs
         for obj in self.objects + [self.hero] :
             self.scene.add(obj.draw())
-        self.scene.draw()
+        
+        # add stats
+        stats = stats[:]
+        recent_reward = self.collected_rewards[-100:] + [0]
+        objects_eaten_str = ', '.join(["%s: %s" % (o,c) for o,c in self.objects_eaten.items()])
+        stats.extend([
+            "nearest wall = %.1f" % (self.distance_to_walls(),),
+            "reward       = %.1f" % (sum(recent_reward)/len(recent_reward),),
+            "objects eaten => %s" % (objects_eaten_str,),
+        ])
+        offset = self.size[1] + 15
+        for txt in stats:
+            self.scene.add(frontend.Text((10, offset + 20), txt, 15))
+            offset += 20
 
+        self.scene.draw()
 
     def setup_draw(self):
         """
@@ -326,4 +343,4 @@ class KarpathyGame(object):
         #clear_output(wait=True)
         #svg_html = self.to_html(stats)
         #display(svg_html)
-        self.draw_int()
+        self.draw_int(stats)

@@ -70,6 +70,16 @@ class Rectangle:
     def draw(self, screen):
         screen.blit(self.surf, self.rect)
 
+class Text:
+    def __init__(self,origin,text,size=24):
+        font = pygame.font.SysFont("monospace", size)
+        self.label = font.render(text, 1, BLACK)
+        self.origin = origin
+        
+    def draw(self, screen):
+        screen.blit(self.label, self.origin)
+
+        
 def test():
     pygame.init()
     WORLD_SIZE = width, height = 1024, 768 

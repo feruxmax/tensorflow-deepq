@@ -50,8 +50,8 @@ current_settings = {
 }
 #%%
 # create the game simulator
-scene = frontend.Scene((current_settings['world_size'][0]+20,
- current_settings['world_size'][1]+20))
+scene = frontend.Scene((current_settings['world_size'][0] + 20,
+                        current_settings['world_size'][1] + 20 + 100))
 g = KarpathyGame(scene, current_settings)
 #%%
 human_control = True
