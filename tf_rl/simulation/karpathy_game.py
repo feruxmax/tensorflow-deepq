@@ -76,6 +76,7 @@ class KarpathyGame(object):
 
         self.observation_lines = self.generate_observation_lines()
 
+        self.sum_reward = 0
         self.object_reward = 0
         self.collected_rewards = []
 
@@ -238,6 +239,7 @@ class KarpathyGame(object):
         total_reward = wall_reward + self.object_reward
         self.object_reward = 0
         self.collected_rewards.append(total_reward)
+        self.sum_reward += total_reward
         return total_reward
 
     def plot_reward(self, smoothing = 30):
@@ -315,7 +317,7 @@ class KarpathyGame(object):
         objects_eaten_str = ', '.join(["%s: %s" % (o,c) for o,c in self.objects_eaten.items()])
         stats.extend([
             "nearest wall = %.1f" % (self.distance_to_walls(),),
-            "reward       = %.1f" % (sum(recent_reward)/len(recent_reward),),
+            "reward       = %.5f" % (self.sum_reward),
             "objects eaten => %s" % (objects_eaten_str,),
         ])
         offset = self.size[1] + 15
