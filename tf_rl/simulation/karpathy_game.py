@@ -49,7 +49,7 @@ class GameObject(object):
     def draw(self):
         """Return svg object for this item."""
         color = self.settings["colors"][self.obj_type]
-        return frontend.Circle(self.position - Point2(self.radius, self.radius), self.radius, color=color)
+        return frontend.Circle(self.position, self.radius, color=color)
 
 class KarpathyGame(object):
     def __init__(self, scene, settings):
@@ -93,7 +93,7 @@ class KarpathyGame(object):
     def perform_action(self, action_id):
         """Change speed to one of hero vectors"""
         assert 0 <= action_id < self.num_actions
-        self.hero.speed *= 0.5
+        self.hero.speed *= 0.75
         self.hero.speed += self.directions[action_id] * self.settings["delta_v"]
 
     def spawn_object(self, obj_type):
@@ -300,6 +300,9 @@ class KarpathyGame(object):
 
     def draw_int(self):
         self.scene.clear()
+
+        self.scene.add(frontend.Rectangle((10, 10), self.size))
+
         for obj in self.objects + [self.hero] :
             self.scene.add(obj.draw())
         self.scene.draw()

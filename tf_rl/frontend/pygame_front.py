@@ -58,6 +58,18 @@ class Circle:
     def draw(self, screen):
         screen.blit(self.surf, self.rect)
 
+class Rectangle:
+
+    def __init__(self,center,size):
+        self.surf = pygame.Surface(size)
+        self.surf.set_colorkey(WHITE)
+        self.surf.fill(WHITE)
+        self.rect = pygame.draw.rect(self.surf, BLACK, (0, 0, size[0], size[1]), 3)
+        self.rect = self.rect.move(int(center[0]), int(center[1]))
+
+    def draw(self, screen):
+        screen.blit(self.surf, self.rect)
+
 def test():
     pygame.init()
     WORLD_SIZE = width, height = 1024, 768 

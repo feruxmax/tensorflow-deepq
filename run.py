@@ -1,8 +1,4 @@
 #%%
-#%load_ext autoreload
-#%autoreload 2
-#%matplotlib inline
-#%%
 from __future__ import print_function
 
 import numpy as np
@@ -54,7 +50,8 @@ current_settings = {
 }
 #%%
 # create the game simulator
-scene = frontend.Scene(current_settings['world_size'])
+scene = frontend.Scene((current_settings['world_size'][0]+20,
+ current_settings['world_size'][1]+20))
 g = KarpathyGame(scene, current_settings)
 #%%
 human_control = True
@@ -92,7 +89,7 @@ else:
     journalist.add_graph(session.graph)
 #%%
 FPS          = 60
-ACTION_EVERY = 3
+ACTION_EVERY = 1
     
 fast_mode = False
 if fast_mode:
