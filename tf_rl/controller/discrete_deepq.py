@@ -281,7 +281,7 @@ class DiscreteDeepQ(object):
         }
 
         if debug:
-            print 'Saving model... ',
+            print ('Saving model... ')
 
         saving_started = time.time()
 
@@ -289,7 +289,7 @@ class DiscreteDeepQ(object):
         with open(STATE_FILE, "wb") as f:
             pickle.dump(state, f)
 
-        print 'done in {} s'.format(time.time() - saving_started)
+        print('done in {} s'.format(time.time() - saving_started))
 
     def restore(self, save_dir, debug=False):
         # deepq state

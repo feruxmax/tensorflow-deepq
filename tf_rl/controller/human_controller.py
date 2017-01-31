@@ -1,16 +1,27 @@
-from tf_rl.utils.getch import getch
-from redis import StrictRedis
-
-
-
 class HumanController(object):
-    def __init__(self, mapping):
-        self.mapping = mapping
-        self.r = StrictRedis()
+    def __init__(self, frontend):
+        self.frontend = frontend 
         self.experience = []
+        self.last_action = None
 
     def action(self, o):
-        return self.mapping[self.r.get("action")]
+        action_codes = {"w":3, "a":2, "s":1, "d":0, None: 4}
+        wasd = self.frontend.get_keys()
+        action = None
+        if len(wasd) == 0:
+            action = None 
+        elif len(wasd) == 1:
+            action = wasd[-1]
+        elif len(wasd) == 2:
+            if wasd[-1] != self.last_action:
+                action = wasd[-1]
+            else:
+                action = wasd[0]
+
+        self.last_action = action
+
+        return action_codes[action]
+
 
     def store(self, observation, action, reward, newobservation):
         pass
@@ -18,14 +29,5 @@ class HumanController(object):
     def training_step(self):
         pass
 
-
-
-def control_me():
-    r = StrictRedis()
-    while True:
-        c = getch()
-        r.set("action", c)
-
-
 if __name__ == '__main__':
-    control_me()
+    pass

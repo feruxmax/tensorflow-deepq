@@ -1,6 +1,6 @@
 import numpy as np
 
-from ..utils import svg
+from ..frontend import svg as frontend
 
 class DoublePendulum(object):
     def __init__(self, params):
@@ -136,21 +136,21 @@ class DoublePendulum(object):
             return int(x), int(y)
 
 
-        scene = svg.Scene((self.size[0] + 20, self.size[1] + 20 +  20 * len(info)))
-        scene.add(svg.Rectangle((10, 10), self.size))
+        scene = frontend.Scene((self.size[0] + 20, self.size[1] + 20 +  20 * len(info)))
+        scene.add(frontend.Rectangle((10, 10), self.size))
 
         joint1 = transform(joint1)
         joint2 = transform(joint2)
-        scene.add(svg.Line(center, joint1))
-        scene.add(svg.Line(joint1, joint2))
+        scene.add(frontend.Line(center, joint1))
+        scene.add(frontend.Line(joint1, joint2))
 
-        scene.add(svg.Circle(center, 5,  color='red'))
-        scene.add(svg.Circle(joint1, 3,  color='blue'))
-        scene.add(svg.Circle(joint2, 3,  color='green'))
+        scene.add(frontend.Circle(center, 5,  color='red'))
+        scene.add(frontend.Circle(joint1, 3,  color='blue'))
+        scene.add(frontend.Circle(joint2, 3,  color='green'))
 
 
         offset = self.size[1] + 15
         for txt in info:
-            scene.add(svg.Text((10, offset + 20), txt, 15))
+            scene.add(frontend.Text((10, offset + 20), txt, 15))
             offset += 20
         return scene

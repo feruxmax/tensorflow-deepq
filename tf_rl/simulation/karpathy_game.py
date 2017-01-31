@@ -3,11 +3,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import random
 import time
+import euclid
 
+from ..frontend import pygame_front as frontend
 from collections import defaultdict
 from euclid import Circle, Point2, Vector2, LineSegment2
 
-from ..utils import svg
 from IPython.display import clear_output, display, HTML
 
 class GameObject(object):
@@ -48,10 +49,10 @@ class GameObject(object):
     def draw(self):
         """Return svg object for this item."""
         color = self.settings["colors"][self.obj_type]
-        return svg.Circle(self.position + Point2(10, 10), self.radius, color=color)
+        return frontend.Circle(self.position, self.radius, color=color)
 
 class KarpathyGame(object):
-    def __init__(self, settings):
+    def __init__(self, scene, settings):
         """Initiallize game simulator with settings"""
         self.settings = settings
         self.size  = self.settings["world_size"]
@@ -59,6 +60,7 @@ class KarpathyGame(object):
                       LineSegment2(Point2(0,self.size[1]),             Point2(self.size[0], self.size[1])),
                       LineSegment2(Point2(self.size[0], self.size[1]), Point2(self.size[0], 0)),
                       LineSegment2(Point2(self.size[0], 0),            Point2(0,0))]
+        self.scene = scene
 
         self.hero = GameObject(Point2(*self.settings["hero_initial_position"]),
                                Vector2(*self.settings["hero_initial_speed"]),
@@ -74,6 +76,7 @@ class KarpathyGame(object):
 
         self.observation_lines = self.generate_observation_lines()
 
+        self.sum_reward = 0
         self.object_reward = 0
         self.collected_rewards = []
 
@@ -91,7 +94,7 @@ class KarpathyGame(object):
     def perform_action(self, action_id):
         """Change speed to one of hero vectors"""
         assert 0 <= action_id < self.num_actions
-        self.hero.speed *= 0.5
+        self.hero.speed *= 0.75
         self.hero.speed += self.directions[action_id] * self.settings["delta_v"]
 
     def spawn_object(self, obj_type):
@@ -236,6 +239,7 @@ class KarpathyGame(object):
         total_reward = wall_reward + self.object_reward
         self.object_reward = 0
         self.collected_rewards.append(total_reward)
+        self.sum_reward += total_reward
         return total_reward
 
     def plot_reward(self, smoothing = 30):
@@ -279,12 +283,11 @@ class KarpathyGame(object):
             "objects eaten => %s" % (objects_eaten_str,),
         ])
 
-        scene = svg.Scene((self.size[0] + 20, self.size[1] + 20 + 20 * len(stats)))
-        scene.add(svg.Rectangle((10, 10), self.size))
-
+        scene = frontend.Scene((self.size[0] + 20, self.size[1] + 20 + 20 * len(stats)))
+        scene.add(frontend.Rectangle((10, 10), self.size))
 
         for line in self.observation_lines:
-            scene.add(svg.Line(line.p1 + self.hero.position + Point2(10,10),
+            scene.add(frontend.Line(line.p1 + self.hero.position + Point2(10,10),
                                line.p2 + self.hero.position + Point2(10,10)))
 
         for obj in self.objects + [self.hero] :
@@ -292,10 +295,37 @@ class KarpathyGame(object):
 
         offset = self.size[1] + 15
         for txt in stats:
-            scene.add(svg.Text((10, offset + 20), txt, 15))
+            scene.add(frontend.Text((10, offset + 20), txt, 15))
             offset += 20
 
         return scene
+
+    def draw_int(self, stats):
+
+        self.scene.clear()
+
+        # add world bounds
+        self.scene.add(frontend.Rectangle((10, 10), self.size))
+
+        # add objs
+        for obj in self.objects + [self.hero] :
+            self.scene.add(obj.draw())
+        
+        # add stats
+        stats = stats[:]
+        recent_reward = self.collected_rewards[-100:] + [0]
+        objects_eaten_str = ', '.join(["%s: %s" % (o,c) for o,c in self.objects_eaten.items()])
+        stats.extend([
+            "nearest wall = %.1f" % (self.distance_to_walls(),),
+            "reward       = %.5f" % (self.sum_reward),
+            "objects eaten => %s" % (objects_eaten_str,),
+        ])
+        offset = self.size[1] + 15
+        for txt in stats:
+            self.scene.add(frontend.Text((10, offset + 20), txt, 15))
+            offset += 20
+
+        self.scene.draw()
 
     def setup_draw(self):
         """
@@ -312,6 +342,7 @@ class KarpathyGame(object):
         It is repeatedly called in each simulated iteration.
         simulate(...) will run with/without this method declared in the simulation class.
         """
-        clear_output(wait=True)
-        svg_html = self.to_html(stats)
-        display(svg_html)
+        #clear_output(wait=True)
+        #svg_html = self.to_html(stats)
+        #display(svg_html)
+        self.draw_int(stats)
