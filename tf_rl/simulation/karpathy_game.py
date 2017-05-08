@@ -3,11 +3,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import random
 import time
-import euclid
 
 from ..frontend import pygame_front as frontend
 from collections import defaultdict
-from euclid import Circle, Point2, Vector2, LineSegment2
+from ..utils.euclid import Circle, Point2, Vector2, LineSegment2
 
 from IPython.display import clear_output, display, HTML
 
