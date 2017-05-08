@@ -46,6 +46,7 @@ current_settings = {
     "observation_line_length": 120.,
     "tolerable_distance_to_wall": 50,
     "wall_distance_penalty":  -0.0,
+    "world_penalty":  -0.001,
     "delta_v": 50
 }
 #%%
@@ -54,7 +55,7 @@ scene = frontend.Scene((current_settings['world_size'][0] + 20,
                         current_settings['world_size'][1] + 20 + 100))
 g = KarpathyGame(scene, current_settings)
 #%%
-human_control = True
+human_control = False 
 
 if human_control:
     current_controller = HumanController(scene) 
@@ -89,11 +90,11 @@ else:
     journalist.add_graph(session.graph)
 #%%
 FPS          = 60
-ACTION_EVERY = 1
+ACTION_EVERY = 3
     
-fast_mode = False
+fast_mode = True 
 if fast_mode:
-    WAIT, VISUALIZE_EVERY = False, 50
+    WAIT, VISUALIZE_EVERY = False, 2
 else:
     WAIT, VISUALIZE_EVERY = True, 1
 

@@ -236,7 +236,7 @@ class KarpathyGame(object):
         wall_reward =  self.settings["wall_distance_penalty"] * \
                        np.exp(-self.distance_to_walls() / self.settings["tolerable_distance_to_wall"])
         assert wall_reward < 1e-3, "You are rewarding hero for being close to the wall!"
-        total_reward = wall_reward + self.object_reward
+        total_reward = wall_reward + self.object_reward + self.settings["world_penalty"]
         self.object_reward = 0
         self.collected_rewards.append(total_reward)
         self.sum_reward += total_reward
