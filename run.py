@@ -66,7 +66,7 @@ else:
 
     # This little guy will let us run tensorboard
     #      tensorboard --logdir [LOG_DIR]
-    journalist = tf.train.SummaryWriter(LOG_DIR)
+    journalist = tf.summary.FileWriter(LOG_DIR)
 
     # Brain maps from observation to Q values for different actions.
     # Here it is a done using a multi layer perceptron with 2 hidden
@@ -84,7 +84,7 @@ else:
                                        store_every_nth=4, train_every_nth=4,
                                        summary_writer=journalist)
     
-    session.run(tf.initialize_all_variables())
+    session.run(tf.global_variables_initializer())
     session.run(current_controller.target_network_update)
     # graph was not available when journalist was created  
     journalist.add_graph(session.graph)

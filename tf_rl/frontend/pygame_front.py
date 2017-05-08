@@ -21,7 +21,7 @@ class Scene:
         self.items.append(item)
 
     def clear(self):
-        self.items.clear()
+        self.items = []
 
     def get_keys(self):
         pressed = pygame.key.get_pressed()
