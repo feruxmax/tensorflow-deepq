@@ -44,9 +44,10 @@ class Scene:
         pygame.display.flip()
 
         for event in pygame.event.get():
-            if event.type == pygame.QUIT: sys.exit()
-        
-  
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
 class Circle:
     def __init__(self,center,radius,color=YELLOW):
         self.surf = pygame.Surface((2*radius, 2*radius))
